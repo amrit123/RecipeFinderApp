@@ -7,6 +7,7 @@ export const clearInput = () => {
 
 export const clearList = () => {
     elements.searchList.innerHTML = "";
+    elements.searchResultPagination.innerHTML = "";
 
 }
 const reduceTitleLength = (title, limit = 17) => {
@@ -35,7 +36,7 @@ const displayEachRecipe = (recipe) => {
     const dom = `
 
     <li>
-    <a class="results__link results__link--active" href="${recipe.recipe_id}">
+    <a class="results__link" href="#${recipe.recipe_id}">
         <figure class="results__fig">
             <img src="${recipe.image_url}" alt="Test">
         </figure>
@@ -50,6 +51,47 @@ const displayEachRecipe = (recipe) => {
     elements.searchList.insertAdjacentHTML("beforeend", dom);
 }
 
-export const displayRecipe = (recipes) => {
-    recipes.forEach(displayEachRecipe);
+
+const createButton = (pageNo, type) => `
+    <button class="btn-inline results__btn--${type}" data-goto=${type === 'prev' ? pageNo - 1 : pageNo + 1}>
+        <span>Page ${type === 'prev' ? pageNo - 1 : pageNo + 1}</span>
+        <svg class="search__icon">
+            <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+        </svg>
+    </button>
+`;
+
+
+const renderPagination=(pageNo,totalResults,resultPerPage)=>{
+
+    
+    const totalPages = Math.ceil(totalResults / resultPerPage);
+
+    let button;
+    if (pageNo === 1 && totalPages > 1) {
+        console.log(pageNo);
+        // Only button to go to next page
+        button = createButton(pageNo, 'next');
+    } else if (pageNo < totalPages) {
+        // Both buttons
+        console.log(pageNo+1);
+        button = `
+            ${createButton(pageNo, 'prev')}
+            ${createButton(pageNo, 'next')}
+        `;
+    } else if (pageNo === totalPages && totalPages > 1) {
+        // Only button to go to prev page
+        button = createButton(pageNo, 'prev');
+    }
+
+    elements.searchResultPagination.insertAdjacentHTML('afterbegin', button);
+}
+
+
+
+export const displayRecipe = (recipes,pageNo=1,resultPerPage=10) => {
+    const start=(pageNo-1)*resultPerPage;
+    const end=pageNo*resultPerPage;
+    recipes.slice(start,end).forEach(displayEachRecipe);
+    renderPagination(pageNo, recipes.length, resultPerPage);
 }

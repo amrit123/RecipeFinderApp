@@ -1,6 +1,6 @@
 // Global app controller
 import Search from "./models/Search";
-import {elements} from "./views/domStore";
+import {elements,renderLoader,clearLoader} from "./views/domStore";
 import * as searchView from "./views/searchView";
 /*
 global state of the app
@@ -21,11 +21,14 @@ if(query){
     //prepare UI for results
     searchView.clearInput();
     searchView.clearList();
+    renderLoader(elements.searchResult);
     //search for recipe
     await state.search.getRecipe();
-}
     //display the result
+    clearLoader();
     searchView.displayRecipe(state.search.result);
+}
+    
 }
 
 elements.searchButton.addEventListener("submit",(e)=>{
@@ -38,6 +41,15 @@ document.addEventListener("keypress",(e) =>{
         controlSearch();
     }
 })
+
+elements.searchResultPagination.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-inline');
+    if (btn) {
+        const goToPage = parseInt(btn.dataset.goto);
+        searchView.clearList();
+        searchView.displayRecipe(state.search.result, goToPage);
+    }
+});
 
 
 //search.getRecipe();
