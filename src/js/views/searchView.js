@@ -10,6 +10,15 @@ export const clearList = () => {
     elements.searchResultPagination.innerHTML = "";
 
 }
+
+export const highlightSelected = id => {
+    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    resultsArr.forEach(el => {
+        el.classList.remove('results__link--active');
+    });
+    document.querySelector(`.results__link[href*="${id}"]`).classList.add('results__link--active');
+};
+
 const reduceTitleLength = (title, limit = 17) => {
     let accumulator = 0;
     const newTitle=[];
@@ -89,7 +98,7 @@ const renderPagination=(pageNo,totalResults,resultPerPage)=>{
 
 
 
-export const displayRecipe = (recipes,pageNo=1,resultPerPage=10) => {
+export const displayRecipeList = (recipes,pageNo=1,resultPerPage=10) => {
     const start=(pageNo-1)*resultPerPage;
     const end=pageNo*resultPerPage;
     recipes.slice(start,end).forEach(displayEachRecipe);

@@ -3,6 +3,7 @@ import Search from "./models/Search";
 import Recipe from "./models/Recipe";
 import {elements,renderLoader,clearLoader} from "./views/domStore";
 import * as searchView from "./views/searchView";
+import * as recipeView from "./views/recipeView";
 /*
 global state of the app
 -search object
@@ -28,7 +29,7 @@ if(query){
         await state.search.getRecipe();
         //display the result
         clearLoader();
-        searchView.displayRecipe(state.search.result);
+        searchView.displayRecipeList(state.search.result);
     }
     catch(err){
         alert("problem loading serches!!!");
@@ -54,7 +55,7 @@ elements.searchResultPagination.addEventListener('click', e => {
     if (btn) {
         const goToPage = parseInt(btn.dataset.goto);
         searchView.clearList();
-        searchView.displayRecipe(state.search.result, goToPage);
+        searchView.displayRecipeList(state.search.result, goToPage);
     }
 });
 
@@ -64,6 +65,9 @@ Recipe controller
 const controlRecipe=async ()=>{
     const id = window.location.hash.replace('#', '');
     if(id){
+        recipeView.clearRecipe();
+        renderLoader(elements.recipe);
+        if(state.search)searchView.highlightSelected(id);
 state.recipe = new Recipe(id);
 console.log("get recipe");
 
@@ -71,6 +75,9 @@ console.log("get recipe");
     state.recipe.parseIngredients();
     state.recipe.calcTime();
     state.recipe.calcServings();
+    clearLoader();
+    
+    recipeView.displayIngredients(state.recipe);
     console.log(state.recipe);
    
    
