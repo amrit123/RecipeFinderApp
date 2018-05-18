@@ -1,5 +1,6 @@
 // Global app controller
 import Search from "./models/Search";
+import Recipe from "./models/Recipe";
 import {elements,renderLoader,clearLoader} from "./views/domStore";
 import * as searchView from "./views/searchView";
 /*
@@ -23,10 +24,16 @@ if(query){
     searchView.clearList();
     renderLoader(elements.searchResult);
     //search for recipe
-    await state.search.getRecipe();
-    //display the result
-    clearLoader();
-    searchView.displayRecipe(state.search.result);
+    try{
+        await state.search.getRecipe();
+        //display the result
+        clearLoader();
+        searchView.displayRecipe(state.search.result);
+    }
+    catch(err){
+        alert("problem loading serches!!!");
+    }
+  
 }
     
 }
@@ -51,6 +58,27 @@ elements.searchResultPagination.addEventListener('click', e => {
     }
 });
 
+/* 
+Recipe controller
+*/
+const controlRecipe=async ()=>{
+    const id = window.location.hash.replace('#', '');
+    console.log(id);
+    if(id){
+state.recipe=new Recipe(id);
+try{
+    await state.recipe.getRecipe();
+    state.recipe.calcTime();
+    state.recipe.calcServing();
+}
+catch(err){
+    alert("error in getting recipe");
+}
+
+    }
+
+}
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
 //search.getRecipe();
 //6dbf9fec7ad839d5ce59d19ea338f956
