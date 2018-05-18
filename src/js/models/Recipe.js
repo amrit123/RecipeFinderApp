@@ -37,7 +37,69 @@ export default class Recipe {
         const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds'];
         const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound'];
         
+        const parsedIngredients=this.ingredients.map((el)=>{
+            //uniform units
+             let ingredient=el.toLowerCase();
+             
+             unitsLong.forEach((unit,i)=>{
+                ingredient= ingredient.replace(unit,unitsShort[i]);
+               
+             }) 
+             
+            //remove parenthesis
+            ingredient=ingredient.replace(/ *\([^)]*\) */g, " ");
+           // console.log(ingredient);
+            
+            //parse ingredients into count,unit and ingredients
+            const arrayIngredients=ingredient.split(" ");
+           
+           const unitIndex = arrayIngredients.findIndex(el2 => unitsShort.includes(el2));
+      
+            let objIng;
+            if(unitIndex>-1){
+                
+                // There is a unit
+                // Ex. 4 1/2 cups, arrCount is [4, 1/2] --> eval("4+1/2") --> 4.5
+                // Ex. 4 cups, arrCount is [4]
+                const arrCount = arrayIngredients.slice(0, unitIndex);
+                
+                let count;
+                if (arrCount.length === 1) {
+                    count = eval(arrayIngredients[0].replace('-', '+'));
+                } else {
+                    count = eval(arrayIngredients.slice(0, unitIndex).join('+'));
+                }
 
+                objIng = {
+                    count:count,
+                    unit: arrayIngredients[unitIndex],
+                    ingredient: arrayIngredients.slice(unitIndex + 1).join(' ')
+                };
+
+            }else if(parseInt(arrayIngredients[0],10)){
+                //there is no unit but ist digit is number
+                objIng={
+                    count:parseInt(arrayIngredients[0],10),
+                    unit:"",
+                    ingredient:arrayIngredients.slice(1).join(" ")
+                }
+            }
+            else if(unitIndex===-1){
+                //there is no unit and no number in ist position
+                objIng={
+                    count:1,
+                    unit:"",
+                    ingredient:ingredient
+                }
+            }
+            //console.log(arrayIngredients);
+            
+          
+            return objIng;
+
+
+        });
+this.ingredients=parsedIngredients;
    
 }
 }

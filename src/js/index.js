@@ -63,17 +63,18 @@ Recipe controller
 */
 const controlRecipe=async ()=>{
     const id = window.location.hash.replace('#', '');
-    console.log(id);
     if(id){
-state.recipe=new Recipe(id);
-try{
+state.recipe = new Recipe(id);
+console.log("get recipe");
+
     await state.recipe.getRecipe();
+    state.recipe.parseIngredients();
     state.recipe.calcTime();
-    state.recipe.calcServing();
-}
-catch(err){
-    alert("error in getting recipe");
-}
+    state.recipe.calcServings();
+    console.log(state.recipe);
+   
+   
+ 
 
     }
 
