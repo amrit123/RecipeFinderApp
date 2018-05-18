@@ -88,6 +88,23 @@ console.log("get recipe");
 }
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
-//search.getRecipe();
-//6dbf9fec7ad839d5ce59d19ea338f956
-//http://food2fork.com/api/search
+//ebent to increase or decrese serving
+elements.recipe.addEventListener("click",e=>{
+
+if(e.target.matches(".btn-decrease,.btn-decrease *")) //btn_decrease* means any target that is child of btn-decrease
+
+{
+if(state.recipe.servings>1){
+    
+    state.recipe.updateServing("decreasing");
+    recipeView.updateServingIngredients(state.recipe);
+}
+   
+}
+if(e.target.matches(".btn-increase,.btn-increase *")){
+    
+    state.recipe.updateServing("increasing");
+    recipeView.updateServingIngredients(state.recipe);
+}
+console.log( state.recipe);
+})

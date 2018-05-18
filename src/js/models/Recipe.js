@@ -103,4 +103,14 @@ export default class Recipe {
 this.ingredients=parsedIngredients;
    
 }
+updateServing(type){
+    
+const updatedServing=type==="decreasing"?this.servings-1:this.servings+1;
+this.ingredients.forEach(ing=>{
+    ing.count= ing.count*(updatedServing/this.servings);
+})
+
+this.servings=updatedServing;
+
+}
 }
