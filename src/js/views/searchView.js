@@ -19,7 +19,7 @@ export const highlightSelected = id => {
     document.querySelector(`.results__link[href*="${id}"]`).classList.add('results__link--active');
 };
 
-const reduceTitleLength = (title, limit = 17) => {
+export const reduceTitleLength = (title, limit = 17) => {
     let accumulator = 0;
     const newTitle=[];
     if(title.length>limit){

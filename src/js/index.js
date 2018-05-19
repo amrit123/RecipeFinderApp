@@ -2,10 +2,12 @@
 import Search from "./models/Search";
 import Recipe from "./models/Recipe";
 import Shoppinglist from "./models/Shoppinglist";
+import Likes from "./models/Likes";
 import {elements,renderLoader,clearLoader} from "./views/domStore";
 import * as searchView from "./views/searchView";
 import * as recipeView from "./views/recipeView";
 import * as shoppingListView from "./views/shoppingListView";
+import * as likeView from "./views/likeView";
 /*
 global state of the app
 -search object
@@ -79,7 +81,7 @@ console.log("get recipe");
     state.recipe.calcServings();
     clearLoader();
     
-    recipeView.displayIngredients(state.recipe);
+    recipeView.displayIngredients(state.recipe,state.likes.isLiked(id));
     console.log(state.recipe);
    
    
@@ -122,9 +124,50 @@ elements.shoppingList.addEventListener('click', e => {
     }
 });
 
+/* 
+Liked controller
+*/
+state.likes=new Likes();
+likeView.toggleLikeMenu(state.likes.getNumLikes());
+
+const controlLike=()=>{
+    if (!state.likes) state.likes = new Likes();
+    const currentID = state.recipe.id;
+
+    // recipe has NOT yet been liked 
+    if (!state.likes.isLiked(currentID)) {
+       
+        // Add like to the state
+        const newLike = state.likes.addLike(
+            currentID,
+            state.recipe.title,
+            state.recipe.author,
+            state.recipe.img
+        );
+        // Toggle the like button
+        likeView.toggleLikeBtn(true); //this means set it to liked
+
+        // Add like to UI list
+        likeView.renderLike(newLike);
+
+    // User HAS liked current recipe
+    } else {
+        // Remove like from the state
+        state.likes.deleteLike(currentID);
+
+        // Toggle the like button
+        likeView.toggleLikeBtn(false); //this means set it to not liked
+
+        // Remove like from UI list
+        likeView.deleteLike(currentID);
+    }
+    likeView.toggleLikeMenu(state.likes.getNumLikes());
+
+}
+
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
-//ebent to increase or decrese serving
+//event to increase or decrese serving
 elements.recipe.addEventListener("click",e=>{
 
 if(e.target.matches(".btn-decrease,.btn-decrease *")) //btn_decrease* means any target that is child of btn-decrease
@@ -146,8 +189,10 @@ else if (e.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
     // Add ingredients to shopping list
     controlList();
 } else if (e.target.matches('.recipe__love, .recipe__love *')) {
-    // Like controller
+    // Add recipe to like list
     controlLike();
 }
-console.log( state.recipe);
+
 })
+
+
