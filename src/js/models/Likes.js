@@ -34,9 +34,9 @@ export default class Likes {
     }
 
     readStorage() {
-        const storage = JSON.parse(localStorage.getItem('likes'));
+        const readStorage = JSON.parse(localStorage.getItem('likes'));
         
-        // Restoring likes from the localStorage
-        if (storage) this.likes = storage;
+        // reading likes from the localStorage.will work even the browsers reloads
+        if (readStorage) this.likes = readStorage;
     }
 }
