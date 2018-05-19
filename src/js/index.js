@@ -82,7 +82,7 @@ const controlRecipe = async () => {
         clearLoader();
 
         recipeView.displayIngredients(state.recipe, state.likes.isLiked(id));
-        console.log(state.recipe);
+        
 
 
 

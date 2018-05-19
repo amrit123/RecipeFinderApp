@@ -78,7 +78,7 @@ const renderPagination=(pageNo,totalResults,resultPerPage)=>{
 
     let button;
     if (pageNo === 1 && totalPages > 1) {
-        console.log(pageNo);
+        
         // Only button to go to next page
         button = createButton(pageNo, 'next');
     } else if (pageNo < totalPages) {

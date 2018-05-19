@@ -37,7 +37,7 @@ const createIngredients=(ing)=>`
       `;
 
 export const displayIngredients = (recipe,isLiked) => {
-    console.log("the recipe is "+ isLiked);
+    
    const markUp=`
    <figure class="recipe__fig">
    <img src="${recipe.img}" alt="${recipe.title}" class="recipe__img">
