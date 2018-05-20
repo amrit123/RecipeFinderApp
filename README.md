@@ -1,6 +1,6 @@
 # Recipe finder app
 
-the App uses the http://food2fork.com/ api to displat the recipe based on search item. use can also select the recipe to then call another api that gives the ingredients details of the recipe. the recipe can be added to the shopping list.the user can also select the recipe as the favoutite and store in favourite list. the window storage is used to save the liked recipe even after browsers reload
+This App uses the http://food2fork.com/ api to request and display the recipe based on search item. user can  select the recipe to then call another api that gives the ingredients details of that recipe. the recipe can be added to the shopping list.the user can also select the recipe as a favourite and store in favourite list. the window storage is used to save the liked recipe even after browsers reload
 
 ## Getting Started
 
