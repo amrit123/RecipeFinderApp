@@ -1,5 +1,10 @@
 import { elements } from "./domStore";
 
+export const toggleDeleteAllMenu = items => {
+
+    elements.deleteAllShoppingList.style.visibility = items > 0 ? 'visible' : 'hidden';
+};
+
 export const renderItem = item => {
     const markup = `
         <li class="shopping__item" data-itemid=${item.id}>

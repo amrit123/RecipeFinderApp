@@ -98,9 +98,16 @@ const controlList = () => {
     // Create a new list IF there in none yet
     if (!state.list) state.list = new Shoppinglist();
     // Add each ingredient to the list and UI
-    state.recipe.ingredients.forEach(el => {
+   /*  state.recipe.ingredients.forEach(el => {
         const item = state.list.addItem(el.count, el.unit, el.ingredient);
         shoppingListView.renderItem(item);
+    }); */
+    state.recipe.ingredients.forEach(el => {
+        const item = state.list.addItem(el.count, el.unit, el.ingredient);
+        
+        shoppingListView.renderItem(item);
+        //render delete All button
+        shoppingListView.toggleDeleteAllMenu(state.list.items.length);
     });
 
 }
@@ -108,6 +115,7 @@ const controlList = () => {
 
 elements.shoppingList.addEventListener('click', e => {
     const id = e.target.closest('.shopping__item').dataset.itemid;
+    console.log("id id "+ id);
 
     // Handle the delete button
     if (e.target.matches('.shopping__delete, .shopping__delete *')) {
@@ -125,15 +133,15 @@ elements.shoppingList.addEventListener('click', e => {
 });
 
  elements.deleteAllShoppingList.addEventListener('click', ()=> {
-   
-    const currentShoppingList=state.list;
-    console.log(state.list.items.length);
-    if(state.list.items.length>1){
-        state.list.items.forEach((item)=>{
-            shoppingListView.deleteItem(item.id);
+     const items=state.list.items;
+    if(items.length>=1){
+        items.forEach((item)=>{    
+            shoppingListView.deleteItem(item.id);  
         })
-       
     }
+    state.list.items.splice(0,state.list.items.length);
+
+    shoppingListView.toggleDeleteAllMenu(state.list.items.length);
     
 }) 
 
@@ -180,12 +188,16 @@ const controlLike = () => {
 // Restore liked recipes on page load
 window.addEventListener('load', () => {
     state.likes = new Likes();
+    state.list = new Shoppinglist();
 
     // Restore likes
     state.likes.readStorage();
 
     // Toggle like menu button
     likeView.toggleLikeMenu(state.likes.getNumLikes());
+
+    // Toggle delete All from Shopping list  button
+    shoppingListView.toggleDeleteAllMenu(state.list.items.length);
 
     // Render the existing likes
     state.likes.likes.forEach(like => likeView.renderLike(like));
