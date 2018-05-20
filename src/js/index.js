@@ -93,6 +93,33 @@ const controlRecipe = async () => {
 /* 
 Shopping list controller
 */
+const checkDuplicate=(el)=>{
+  
+      const currentItems=state.list.items.map((i)=>{
+
+                   return i.ingredient;
+      });
+      console.log(currentItems);
+      if(state.list.items.length>=1){
+            if(currentItems.includes(el.ingredient)){
+                return false;
+            }
+            else{
+                console.log("not true ");
+                return true;
+            }
+        
+           
+      }
+      else{
+         // console.log("not in list");
+        return true;
+      }
+   
+    
+    
+    
+} 
 const controlList = () => {
 
     // Create a new list IF there in none yet
@@ -102,13 +129,29 @@ const controlList = () => {
         const item = state.list.addItem(el.count, el.unit, el.ingredient);
         shoppingListView.renderItem(item);
     }); */
+    const finalIngredients=[];
+    
     state.recipe.ingredients.forEach(el => {
-        const item = state.list.addItem(el.count, el.unit, el.ingredient);
+        //check if the ingredients is already in shopping list
+        const finalItems= checkDuplicate(el); 
+        //if not prepare the items to display in ui
+        if(finalItems){
+            finalIngredients.push(el);
+        }
+
+    });
+   
+    if(finalIngredients.length>0){
+    finalIngredients.forEach(el => {
+            const item = state.list.addItem(el.count, el.unit, el.ingredient);  
+            shoppingListView.renderItem(item);
         
-        shoppingListView.renderItem(item);
         //render delete All button
         shoppingListView.toggleDeleteAllMenu(state.list.items.length);
     });
+    
+}
+
 
 }
 
@@ -134,11 +177,14 @@ elements.shoppingList.addEventListener('click', e => {
 
  elements.deleteAllShoppingList.addEventListener('click', ()=> {
      const items=state.list.items;
+     console.log(items);
     if(items.length>=1){
-        items.forEach((item)=>{    
+        items.forEach((item)=>{  
+            //delete from the UI first  
             shoppingListView.deleteItem(item.id);  
         })
     }
+    //delete from the state also
     state.list.items.splice(0,state.list.items.length);
 
     shoppingListView.toggleDeleteAllMenu(state.list.items.length);
