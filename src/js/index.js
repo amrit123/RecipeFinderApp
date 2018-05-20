@@ -124,6 +124,19 @@ elements.shoppingList.addEventListener('click', e => {
     }
 });
 
+ elements.deleteAllShoppingList.addEventListener('click', ()=> {
+   
+    const currentShoppingList=state.list;
+    console.log(state.list.items.length);
+    if(state.list.items.length>1){
+        state.list.items.forEach((item)=>{
+            shoppingListView.deleteItem(item.id);
+        })
+       
+    }
+    
+}) 
+
 /* 
 Liked controller
 */

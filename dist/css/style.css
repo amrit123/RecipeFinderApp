@@ -51,6 +51,9 @@ body {
   display: flex;
   align-items: center;
   transition: all .2s; }
+
+
+
   .btn:hover, .btn-small:hover {
     transform: scale(1.05); }
   .btn:focus, .btn-small:focus {
